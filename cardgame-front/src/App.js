@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useGranularEffect } from 'granular-hooks';
 import './App.css';
 
 function App() {
@@ -8,19 +9,44 @@ function App() {
   const [userChoiceButtonStatus, setUserChoiceButtonStatus] = useState(true);
   const [lives, setLives] = useState(3);
   const [responseMsg, setResponseMsg] = useState(null);
+  const [count, setCount] = useState(10);
+  const [intervalId, setIntervalId] = useState(null);
+
+  const startCountdown = () => {
+    const interval = setInterval(() => {
+      setCount(prevCount => {
+        if (prevCount === 0) {
+          clearInterval(interval);
+          setStartGameButtonStatus(false);
+          setUserChoiceButtonStatus(true);
+        }
+        return prevCount - 1;
+      });
+    }, 1000);
+    setIntervalId(interval);
+    return () => clearInterval(interval);
+  };
+
+  const stopCountdown = () => {
+    clearInterval(intervalId);
+    setIntervalId(null);
+  }
+  
 
   function startGame() {
     setLives(3);
+    setCount(10);
     setResponseMsg(null);
     setStartGameButtonStatus(true);
     setUserChoiceButtonStatus(false);
     fetch("http://localhost:8080/startGame")
     .then(res => res.json())
     .then(body => setCardAndResult(body));
-  }
+  };
 
   function sendUserChoice(event) {
     event.preventDefault();
+    setCount(10);
     fetch("http://localhost:8080/userGuess?value=" + userChoice)
     .then(res => res.json())
     .then(body => {
@@ -32,20 +58,22 @@ function App() {
         setResponseMsg("Correct!");
       }
     });
-  }
+  };
 
-  useEffect(() => {
+  useGranularEffect(() => {
     if (lives === 0) {
       setStartGameButtonStatus(false);
       setUserChoiceButtonStatus(true);
+      stopCountdown();
     }
-  }, [lives]);
+  }, [lives], [stopCountdown]);
 
   return (
     <div className="App">
       <div className="container mt">
         <div>
-          <button onClick={startGame} type="submit" className="btn btn-primary mt-3" disabled={startGameButtonStatus}>Start the game</button>
+          <button onClick={() => {startGame(); startCountdown()}} type="submit" className="btn btn-primary mt-3" disabled={startGameButtonStatus}>Start the game</button><br/>
+          Time remaining: {count >= 0 ? count : "Time's up!"}
         </div><br/>
         <span>Card name: | Card rank:</span><br/>
         {cardAndResult.length !== 0 &&
