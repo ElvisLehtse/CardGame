@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useGranularEffect } from 'granular-hooks';
+import { useCallback, useEffect, useState } from 'react';
+import UserChoiceForms from './components/UserChoiceForms';
 import './App.css';
 
 function App() {
@@ -10,10 +10,15 @@ function App() {
   const [lives, setLives] = useState(3);
   const [responseMsg, setResponseMsg] = useState(null);
   const [count, setCount] = useState(10);
-  const [intervalId, setIntervalId] = useState(null);
+  const [interval, setCountdownInterval] = useState(null);
   const [score, setScore] = useState(0);
 
-  function startGame() {
+  const startGame = () => {
+    initialize();
+    startCountdown();
+  };
+
+  const initialize = () => {
     setScore(0);
     setLives(3);
     setCount(10);
@@ -23,7 +28,7 @@ function App() {
     fetch("http://localhost:8080/startGame")
     .then(res => res.json())
     .then(body => setCardAndResult(body));
-  };
+  }
 
   const startCountdown = () => {
     const interval = setInterval(() => {
@@ -36,16 +41,15 @@ function App() {
         return prevCount - 1;
       });
     }, 1000);
-    setIntervalId(interval);
-    return () => clearInterval(interval);
+    setCountdownInterval(interval);
   };
 
-  const stopCountdown = () => {
-    clearInterval(intervalId);
-    setIntervalId(null);
-  }
+  const stopCountdown = useCallback(() => {
+    clearInterval(interval);
+    setCountdownInterval(null);
+  }, [interval]);
 
-  function sendUserChoice(event) {
+  const sendUserChoice = (event) => {
     event.preventDefault();
     setCount(10);
     fetch("http://localhost:8080/userGuess?value=" + userChoice)
@@ -62,19 +66,19 @@ function App() {
     });
   };
 
-  useGranularEffect(() => {
+  useEffect(() => {
     if (lives === 0) {
       setStartGameButtonStatus(false);
       setUserChoiceButtonStatus(true);
       stopCountdown();
     }
-  }, [lives], [stopCountdown]);
+  }, [lives, stopCountdown]);
 
   return (
     <div className="App">
       <div className="container mt">
         <div>
-          <button onClick={() => {startGame(); startCountdown()}} type="submit" className="btn btn-primary mt-3" disabled={startGameButtonStatus}>Start the game</button><br/>
+          <button onClick={() => startGame()} type="submit" className="btn btn-primary mt-3" disabled={startGameButtonStatus}>Start the game</button><br/>
           Time remaining: {count >= 0 ? count : "Time's up!"}<br/>
           Your score: {score}
         </div><br/>
@@ -83,11 +87,7 @@ function App() {
           <>{cardAndResult.card.name} | {cardAndResult.card.rank}</>
         }
         <br/><span>What will the next card be?</span><br/>
-        <form onSubmit={sendUserChoice}>
-          <button onClick={() => setUserChoice("lower")} type="submit" className="btn btn-primary mt-3" disabled={userChoiceButtonStatus}>Lower</button>
-          <button onClick={() => setUserChoice("equal")}  type="submit" className="btn btn-primary mt-3" disabled={userChoiceButtonStatus}>Equal</button>
-          <button onClick={() => setUserChoice("higher")}  type="submit" className="btn btn-primary mt-3" disabled={userChoiceButtonStatus}>Higher</button>
-        </form><br/>
+        <UserChoiceForms submit={sendUserChoice} choose={setUserChoice} status={userChoiceButtonStatus}/><br/>
         <span> Lives left: {lives}</span>
         {responseMsg && <h6>{responseMsg}</h6>}
         {cardAndResult.lives === 0 &&
