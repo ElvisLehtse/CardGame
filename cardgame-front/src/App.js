@@ -11,6 +11,19 @@ function App() {
   const [responseMsg, setResponseMsg] = useState(null);
   const [count, setCount] = useState(10);
   const [intervalId, setIntervalId] = useState(null);
+  const [score, setScore] = useState(0);
+
+  function startGame() {
+    setScore(0);
+    setLives(3);
+    setCount(10);
+    setResponseMsg(null);
+    setStartGameButtonStatus(true);
+    setUserChoiceButtonStatus(false);
+    fetch("http://localhost:8080/startGame")
+    .then(res => res.json())
+    .then(body => setCardAndResult(body));
+  };
 
   const startCountdown = () => {
     const interval = setInterval(() => {
@@ -31,18 +44,6 @@ function App() {
     clearInterval(intervalId);
     setIntervalId(null);
   }
-  
-
-  function startGame() {
-    setLives(3);
-    setCount(10);
-    setResponseMsg(null);
-    setStartGameButtonStatus(true);
-    setUserChoiceButtonStatus(false);
-    fetch("http://localhost:8080/startGame")
-    .then(res => res.json())
-    .then(body => setCardAndResult(body));
-  };
 
   function sendUserChoice(event) {
     event.preventDefault();
@@ -56,6 +57,7 @@ function App() {
         setResponseMsg("Incorrect!");
       } else if (body.result === true) {
         setResponseMsg("Correct!");
+        setScore(score + 1);
       }
     });
   };
@@ -73,7 +75,8 @@ function App() {
       <div className="container mt">
         <div>
           <button onClick={() => {startGame(); startCountdown()}} type="submit" className="btn btn-primary mt-3" disabled={startGameButtonStatus}>Start the game</button><br/>
-          Time remaining: {count >= 0 ? count : "Time's up!"}
+          Time remaining: {count >= 0 ? count : "Time's up!"}<br/>
+          Your score: {score}
         </div><br/>
         <span>Card name: | Card rank:</span><br/>
         {cardAndResult.length !== 0 &&
