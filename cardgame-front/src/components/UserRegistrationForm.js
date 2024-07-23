@@ -7,6 +7,7 @@ function UserRegistrationForm(props) {
 
   const playerRegistration = (event) => {
     event.preventDefault();
+    props.changeStatus(true);
     fetch("http://localhost:8080/playerRegistration?name=" + name + "&score=" + props.score, {method: "POST"});
   };
 

@@ -46,6 +46,7 @@ function App() {
       setCount(prevCount => {
         if (prevCount === 0) {
           endGame();
+          clearInterval(interval);
         }
         return prevCount - 1;
       });
@@ -99,7 +100,7 @@ function App() {
         <h6>Defeat!</h6>
         }
         <br/><br/>
-        <UserRegistrationForm status={registrationButtonStatus} score={score}/>
+        <UserRegistrationForm status={registrationButtonStatus} score={score} changeStatus={(value) => {setRegistrationButtonStatus(value)}}/>
         <br/>
         <Scoreboard/>
       </div>
