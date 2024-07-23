@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -45,5 +46,15 @@ public class CardGameController {
     public void playerRegistration(@RequestParam(value = "name") String name, @RequestParam(value = "score") int score) {
         serverReaderWriter.writePlayer(new Player(null, name));
         serverReaderWriter.writeScore(new Score(null, score, serverReaderWriter.findPlayerName(name), timeElapsed));
+    }
+
+    @GetMapping("getResultList")
+    public List<Score> getResultList(@RequestParam(value = "filter") String filter) {
+        if (filter.equals("score")) {
+            return serverReaderWriter.sortByScore();
+        } else if (filter.equals("gametime")) {
+            return serverReaderWriter.sortByGameTime();
+        }
+        return null;
     }
 }

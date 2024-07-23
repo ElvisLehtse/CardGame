@@ -7,6 +7,8 @@ import com.Elvis.HiLoCardGame.repository.ScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ServerReaderWriter {
 
@@ -27,5 +29,13 @@ public class ServerReaderWriter {
 
     public void writeScore(Score score) {
         scoreRepository.save(score);
+    }
+
+    public List<Score> sortByScore() {
+        return scoreRepository.findByOrderByScoreDesc();
+    }
+
+    public List<Score> sortByGameTime() {
+        return scoreRepository.findByOrderByPlayTimeAsc();
     }
 }
