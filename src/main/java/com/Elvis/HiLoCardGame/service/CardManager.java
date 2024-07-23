@@ -1,4 +1,4 @@
-package com.Elvis.HiLoCardGame;
+package com.Elvis.HiLoCardGame.service;
 
 import com.Elvis.HiLoCardGame.deck.Deck;
 import com.Elvis.HiLoCardGame.model.Card;

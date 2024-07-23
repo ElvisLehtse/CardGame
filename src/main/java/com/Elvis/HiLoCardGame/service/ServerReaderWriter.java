@@ -1,0 +1,31 @@
+package com.Elvis.HiLoCardGame.service;
+
+import com.Elvis.HiLoCardGame.entity.Player;
+import com.Elvis.HiLoCardGame.entity.Score;
+import com.Elvis.HiLoCardGame.repository.PlayerRepository;
+import com.Elvis.HiLoCardGame.repository.ScoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ServerReaderWriter {
+
+    @Autowired
+    PlayerRepository playerRepository;
+    @Autowired
+    ScoreRepository scoreRepository;
+
+    public void writePlayer(Player player) {
+        if (playerRepository.findByName(player.getName()) == null) {
+            playerRepository.save(player);
+        }
+    }
+
+    public Player findPlayerName(String name) {
+        return playerRepository.findByName(name);
+    }
+
+    public void writeScore(Score score) {
+        scoreRepository.save(score);
+    }
+}

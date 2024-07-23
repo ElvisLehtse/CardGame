@@ -1,6 +1,6 @@
 import React from 'react'
 
-function UserChoiceForms(props) {
+function UserChoiceForm(props) {
   return (
     <form onSubmit={props.submit}>
       <button onClick={() => props.choose("lower")} type="submit" className="btn btn-primary mt-3" disabled={props.status}>Lower</button>
@@ -10,4 +10,4 @@ function UserChoiceForms(props) {
   )
 }
 
-export default UserChoiceForms
+export default UserChoiceForm;

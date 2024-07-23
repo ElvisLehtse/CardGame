@@ -1,22 +1,33 @@
 import { useCallback, useEffect, useState } from 'react';
-import UserChoiceForms from './components/UserChoiceForms';
+import UserChoiceForms from './components/UserChoiceForm';
 import './App.css';
+import UserRegistrationForm from './components/UserRegistrationForm';
 
 function App() {
   const [userChoice, setUserChoice] = useState("");
   const [cardAndResult, setCardAndResult] = useState("");
   const [startGameButtonStatus, setStartGameButtonStatus] = useState(false);
   const [userChoiceButtonStatus, setUserChoiceButtonStatus] = useState(true);
+  const [registrationButtonStatus, setRegistrationButtonStatus] = useState(true);
   const [lives, setLives] = useState(3);
   const [responseMsg, setResponseMsg] = useState(null);
   const [count, setCount] = useState(10);
   const [interval, setCountdownInterval] = useState(null);
   const [score, setScore] = useState(0);
+  
 
   const startGame = () => {
     initialize();
     startCountdown();
   };
+
+  const endGame = useCallback(() => {
+    setStartGameButtonStatus(false);
+    setUserChoiceButtonStatus(true);
+    setRegistrationButtonStatus(false);
+    clearInterval(interval);
+    fetch("http://localhost:8080/endGame")
+  }, [interval]);
 
   const initialize = () => {
     setScore(0);
@@ -34,20 +45,16 @@ function App() {
     const interval = setInterval(() => {
       setCount(prevCount => {
         if (prevCount === 0) {
-          clearInterval(interval);
-          setStartGameButtonStatus(false);
-          setUserChoiceButtonStatus(true);
+          endGame();
         }
         return prevCount - 1;
       });
     }, 1000);
     setCountdownInterval(interval);
+    return () => {
+      clearInterval(interval)
+    };
   };
-
-  const stopCountdown = useCallback(() => {
-    clearInterval(interval);
-    setCountdownInterval(null);
-  }, [interval]);
 
   const sendUserChoice = (event) => {
     event.preventDefault();
@@ -57,22 +64,20 @@ function App() {
     .then(body => {
       setCardAndResult(body)
       if (body.result === false) {
-        setLives(lives - 1);
+        setLives(prev => prev - 1);
         setResponseMsg("Incorrect!");
       } else if (body.result === true) {
         setResponseMsg("Correct!");
-        setScore(score + 1);
+        setScore(prev => prev + 1);
       }
     });
   };
 
   useEffect(() => {
     if (lives === 0) {
-      setStartGameButtonStatus(false);
-      setUserChoiceButtonStatus(true);
-      stopCountdown();
+      endGame();
     }
-  }, [lives, stopCountdown]);
+  }, [lives, endGame]);
 
   return (
     <div className="App">
@@ -93,7 +98,8 @@ function App() {
         {cardAndResult.lives === 0 &&
         <h6>Defeat!</h6>
         }
-        
+        <br/><br/>
+        <UserRegistrationForm status={registrationButtonStatus} score={score}/>
       </div>
     </div>
   );
