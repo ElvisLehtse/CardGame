@@ -1,7 +1,8 @@
+import './App.css';
 import { useCallback, useEffect, useState } from 'react';
 import UserChoiceForms from './components/UserChoiceForm';
-import './App.css';
 import UserRegistrationForm from './components/UserRegistrationForm';
+import Scoreboard from './components/Scoreboard';
 
 function App() {
   const [userChoice, setUserChoice] = useState("");
@@ -14,16 +15,6 @@ function App() {
   const [count, setCount] = useState(10);
   const [interval, setCountdownInterval] = useState(null);
   const [score, setScore] = useState(0);
-  const [filter, setFilert] = useState("score");
-  const [results, getResults] = useState([]);
-
-  const getResultList = (e) => {
-    e.preventDefault();
-    fetch("http://localhost:8080/getResultList?filter=" + filter)
-    .then(res => res.json())
-    .then(body => getResults(body));
-  };
-  
 
   const startGame = () => {
     initialize();
@@ -110,19 +101,7 @@ function App() {
         <br/><br/>
         <UserRegistrationForm status={registrationButtonStatus} score={score}/>
         <br/>
-        <form onSubmit={getResultList}>
-          <h6>Scoreboard</h6>
-          <div className="form-group">
-            <label htmlFor="filter" className="form-label">Sort by</label>
-            <select value={filter} onChange={(e) => {setFilert(e.target.value)}} className="form-select" id="filter">
-              <option value="score">Score</option>
-              <option value="gametime">Gametime</option>
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary mt-3">Submit</button>
-        </form>
-        <br/>
-        {results.map(result => <div>{"Player: " + result.player.name + " | Score: " + result.score + " | Gametime: " + result.playTime + " sec"}<br/></div>)}
+        <Scoreboard/>
       </div>
     </div>
   );

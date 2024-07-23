@@ -57,4 +57,9 @@ public class CardGameController {
         }
         return null;
     }
+
+    @GetMapping("getPlayerResults")
+    public List<Score> getPlayerResults(@RequestParam(value = "player") int id) {
+        return serverReaderWriter.findByPlayer(id);
+    }
 }

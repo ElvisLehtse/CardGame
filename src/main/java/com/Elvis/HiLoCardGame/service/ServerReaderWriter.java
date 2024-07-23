@@ -38,4 +38,8 @@ public class ServerReaderWriter {
     public List<Score> sortByGameTime() {
         return scoreRepository.findByOrderByPlayTimeAsc();
     }
+
+    public List<Score> findByPlayer(int id) {
+        return scoreRepository.findByPlayer_Id(id);
+    }
 }
