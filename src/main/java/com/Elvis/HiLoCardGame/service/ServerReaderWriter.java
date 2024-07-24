@@ -25,10 +25,6 @@ public class ServerReaderWriter {
         return currentPlayer;
     }
 
-    public Player findPlayerName(String name) {
-        return playerRepository.findByName(name);
-    }
-
     public void writeScore(Score score) {
         scoreRepository.save(score);
     }
@@ -41,7 +37,11 @@ public class ServerReaderWriter {
         return scoreRepository.findMaxScoreForEachPlayerOrderByPlayTime();
     }
 
-    public List<Score> findByPlayer(int id) {
-        return scoreRepository.findByPlayer_Id(id);
+    public List<Score> findByPlayerOrderedByScore(int id) {
+        return scoreRepository.findByPlayer_IdOrderByScoreDESC(id);
+    }
+
+    public List<Score> findByPlayerOrderedByPlayTime(int id) {
+        return scoreRepository.findByPlayer_IdOrderByPlayTime(id);
     }
 }

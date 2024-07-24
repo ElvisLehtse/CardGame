@@ -48,11 +48,14 @@ public class CardGameController {
         serverReaderWriter.writeScore(new Score(null, score, currentPlayer, timeElapsed));
     }
 
+    String filterResults;
+
     @GetMapping("getResultList")
     public List<Score> getResultList(@RequestParam(value = "filter") String filter) {
-        if (filter.equals("score")) {
+        filterResults = filter;
+        if (filterResults.equals("score")) {
             return serverReaderWriter.sortByScore();
-        } else if (filter.equals("gametime")) {
+        } else if (filterResults.equals("gametime")) {
             return serverReaderWriter.sortByGameTime();
         }
         return null;
@@ -60,6 +63,11 @@ public class CardGameController {
 
     @GetMapping("getPlayerResults")
     public List<Score> getPlayerResults(@RequestParam(value = "player") int id) {
-        return serverReaderWriter.findByPlayer(id);
+        if (filterResults.equals("score")) {
+            return serverReaderWriter.findByPlayerOrderedByScore(id);
+        } else if (filterResults.equals("gametime")) {
+            return serverReaderWriter.findByPlayerOrderedByPlayTime(id);
+        }
+        return null;
     }
 }
