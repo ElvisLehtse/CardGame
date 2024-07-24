@@ -5,29 +5,11 @@ function Scoreboard() {
   const [filter, setFilert] = useState("score");
   const [results, setResults] = useState([]);
   const [player, setPlayer] = useState("");
-  const [playerResults, setPlayerResults] = useState([
-    {
-      id: 0,
-      score: 0,
-      player:{
-        id: 0,
-        name:""
-      },
-      playTime: 0
-    }
-  ]);
+  const [playerResults, setPlayerResults] = useState([]);
 
   const getResultList = (e) => {
     e.preventDefault();
-    setPlayerResults([{
-      id: 0,
-      score: 0,
-      player:{
-        id: 0,
-        name:""
-      },
-      playTime: 0
-    }]);
+    setPlayerResults([]);
     fetch("http://localhost:8080/getResultList?filter=" + filter)
     .then(res => res.json())
     .then(body => setResults(body));
@@ -62,7 +44,7 @@ function Scoreboard() {
           <button value={player} onClick={(e) => {setPlayer(result.player.id)}} type="submit" className="btn btn-secondary mt-1">{result.player.name} | Score: {result.score} | Gametime: {result.playTime} sec</button>
         }<br/></div>)}<br/>
       </form>
-      {playerResults[0].id !== 0 &&
+      {playerResults.length > 0 &&
         <div>
           <div>All results for {playerResults[0].player.name}:</div>
           {playerResults.map(result => <div key={result.id}>Score: {result.score} | Gametime: {result.playTime} sec</div>)}
