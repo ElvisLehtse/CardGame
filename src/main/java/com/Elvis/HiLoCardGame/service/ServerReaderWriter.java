@@ -32,11 +32,11 @@ public class ServerReaderWriter {
     }
 
     public List<Score> sortByScore() {
-        return scoreRepository.findByOrderByScoreDesc();
+        return scoreRepository.findMaxScoreForEachPlayer();
     }
 
     public List<Score> sortByGameTime() {
-        return scoreRepository.findByOrderByPlayTimeAsc();
+        return scoreRepository.findMaxScoreForEachPlayerOrderByPlayTime();
     }
 
     public List<Score> findByPlayer(int id) {
