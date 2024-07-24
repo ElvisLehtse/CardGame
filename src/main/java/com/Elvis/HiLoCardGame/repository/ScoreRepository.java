@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ScoreRepository extends JpaRepository <Score, Integer> {
-    @Query("select s from Score s where s.score = (select max(s2.score) from Score s2 where s2.player.id = s.player.id)")
-    List<Score> findMaxScoreForEachPlayer();
+    @Query("select s from Score s where s.score = (select max(s2.score) from Score s2 where s2.player.id = s.player.id) order by s.score DESC")
+    List<Score> findMaxScoreForEachPlayerOrderByScoreDESC();
 
     @Query("select s from Score s where s.score = (select max(s2.score) from Score s2 where s2.player.id = s.player.id) order by s.playTime")
     List<Score> findMaxScoreForEachPlayerOrderByPlayTime();

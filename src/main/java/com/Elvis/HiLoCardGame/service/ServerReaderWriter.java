@@ -17,10 +17,12 @@ public class ServerReaderWriter {
     @Autowired
     ScoreRepository scoreRepository;
 
-    public void writePlayer(Player player) {
-        if (playerRepository.findByName(player.getName()) == null) {
-            playerRepository.save(player);
+    public Player writePlayer(Player player) {
+        Player currentPlayer = playerRepository.findByName(player.getName());
+        if (currentPlayer == null) {
+            currentPlayer = playerRepository.save(player);
         }
+        return currentPlayer;
     }
 
     public Player findPlayerName(String name) {
@@ -32,7 +34,7 @@ public class ServerReaderWriter {
     }
 
     public List<Score> sortByScore() {
-        return scoreRepository.findMaxScoreForEachPlayer();
+        return scoreRepository.findMaxScoreForEachPlayerOrderByScoreDESC();
     }
 
     public List<Score> sortByGameTime() {

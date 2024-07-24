@@ -44,8 +44,8 @@ public class CardGameController {
 
     @PostMapping("playerRegistration")
     public void playerRegistration(@RequestParam(value = "name") String name, @RequestParam(value = "score") int score) {
-        serverReaderWriter.writePlayer(new Player(null, name));
-        serverReaderWriter.writeScore(new Score(null, score, serverReaderWriter.findPlayerName(name), timeElapsed));
+        Player currentPlayer = serverReaderWriter.writePlayer(new Player(null, name));
+        serverReaderWriter.writeScore(new Score(null, score, currentPlayer, timeElapsed));
     }
 
     @GetMapping("getResultList")
