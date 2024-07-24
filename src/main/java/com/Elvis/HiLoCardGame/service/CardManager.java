@@ -4,6 +4,7 @@ import com.Elvis.HiLoCardGame.deck.Deck;
 import com.Elvis.HiLoCardGame.model.Card;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -13,14 +14,10 @@ public class CardManager {
     public static Card oldCard = new Card("Empty", 0);
 
     public Card getNewCard() {
-        boolean isNewCardEqualToOld = true;
-        while (isNewCardEqualToOld) {
-            Random random = new Random();
-            newCard = Deck.standardCardDeck().get(random.nextInt(Deck.standardCardDeck().size()));
-            if (!newCard.getName().equals(oldCard.getName())) {
-                isNewCardEqualToOld = false;
-            }
-        }
+        List<Card> newCardList = Deck.standardCardDeck();
+        newCardList.remove(oldCard);
+        Random random = new Random();
+        newCard = newCardList.get(random.nextInt(newCardList.size()));
         return newCard;
     }
 

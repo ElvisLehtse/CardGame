@@ -41,8 +41,6 @@ function App() {
     .then(body => setCardAndResult(body));
   }
 
-  console.log(count);
-
   const startCountdown = () => {
     const interval = setInterval(() => {
       setCount(prevCount => {
