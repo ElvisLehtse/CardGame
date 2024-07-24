@@ -36,7 +36,7 @@ function Scoreboard() {
   const getPlayerResults = (e) => {
     e.preventDefault();
     setResults([]);
-    fetch("http://localhost:8080/getPlayerResults?player=" + player)
+    fetch("http://localhost:8080/getPlayerResults?player=" + player + "&filter=" + filter)
     .then(res => res.json())
     .then(body => setPlayerResults(body));
   };
