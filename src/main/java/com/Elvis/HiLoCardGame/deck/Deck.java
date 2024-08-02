@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class creates the standard 54 card deck
+ */
 @Service
 public class Deck {
 

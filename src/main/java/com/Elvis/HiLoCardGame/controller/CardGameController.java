@@ -2,6 +2,7 @@ package com.Elvis.HiLoCardGame.controller;
 
 import com.Elvis.HiLoCardGame.entity.Player;
 import com.Elvis.HiLoCardGame.entity.Score;
+import com.Elvis.HiLoCardGame.model.NameAndScore;
 import com.Elvis.HiLoCardGame.service.CardManager;
 import com.Elvis.HiLoCardGame.model.CardAndResult;
 import com.Elvis.HiLoCardGame.service.ServerReaderWriter;
@@ -12,6 +13,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
+
+/**
+ * This class handles get and post requests sent from the front-end
+ */
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class CardGameController {
@@ -20,7 +25,6 @@ public class CardGameController {
     CardManager cardManager;
     @Autowired
     ServerReaderWriter serverReaderWriter;
-
     Instant start;
     long timeElapsed;
 
@@ -43,9 +47,9 @@ public class CardGameController {
     }
 
     @PostMapping("playerRegistration")
-    public void playerRegistration(@RequestParam(value = "name") String name, @RequestParam(value = "score") int score) {
-        Player currentPlayer = serverReaderWriter.writePlayer(new Player(null, name));
-        serverReaderWriter.writeScore(new Score(null, score, currentPlayer, timeElapsed));
+    public void playerRegistration(@RequestBody NameAndScore nameAndScore) {
+        Player currentPlayer = serverReaderWriter.writePlayer(new Player(null, nameAndScore.getName()));
+        serverReaderWriter.writeScore(new Score(null, nameAndScore.getScore(), currentPlayer, timeElapsed));
     }
 
     @GetMapping("getResultList")

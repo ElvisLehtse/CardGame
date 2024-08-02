@@ -7,6 +7,7 @@ function Scoreboard() {
   const [player, setPlayer] = useState("");
   const [playerResults, setPlayerResults] = useState([]);
 
+  //Returns the result of players filtered either by score or gametime
   const getResultList = (e) => {
     e.preventDefault();
     setPlayerResults([]);
@@ -15,6 +16,7 @@ function Scoreboard() {
     .then(body => setResults(body));
   };
 
+  //Returns all the results of a single player. The order or results is determined by score or gametime
   const getPlayerResults = (e) => {
     e.preventDefault();
     setResults([]);

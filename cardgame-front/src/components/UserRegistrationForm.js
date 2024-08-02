@@ -5,10 +5,16 @@ function UserRegistrationForm(props) {
 
   const [name, setName] = useState("");
 
+  //Sends a user to back-end to be registered to the database
   const playerRegistration = (event) => {
     event.preventDefault();
     props.changeStatus(true);
-    fetch("http://localhost:8080/playerRegistration?name=" + name + "&score=" + props.score, {method: "POST"});
+    //fetch("http://localhost:8080/playerRegistration?name=" + name + "&score=" + props.score, {method: "POST"});
+    const nameAndScore = {
+      name: name,
+      score: props.score
+    };
+    fetch("http://localhost:8080/playerRegistration", {method: "POST", body: JSON.stringify(nameAndScore), headers: {"Content-Type": "application/json"}});
   };
 
   return (

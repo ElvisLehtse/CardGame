@@ -1,6 +1,5 @@
 package com.Elvis.HiLoCardGame.service;
 
-import com.Elvis.HiLoCardGame.config.AppConfig;
 import com.Elvis.HiLoCardGame.deck.Deck;
 import com.Elvis.HiLoCardGame.model.Card;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class is responsible for drawing new cards and comparing the user choice against the new card
+ */
 @Service
 public class CardManager {
 

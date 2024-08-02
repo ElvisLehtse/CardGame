@@ -21,6 +21,7 @@ function App() {
     startCountdown();
   };
 
+  //Locks and unlocks client options after the game ends
   const endGame = useCallback(() => {
     setStartGameButtonStatus(false);
     setUserChoiceButtonStatus(true);
@@ -29,6 +30,8 @@ function App() {
     fetch("http://localhost:8080/endGame")
   }, [interval]);
 
+
+  //Sets the inital values and retreives the first card from back-end after Start Game button is clicked
   const initialize = () => {
     setScore(0);
     setLives(3);
@@ -36,11 +39,13 @@ function App() {
     setResponseMsg(null);
     setStartGameButtonStatus(true);
     setUserChoiceButtonStatus(false);
+    setRegistrationButtonStatus(true);
     fetch("http://localhost:8080/startGame")
     .then(res => res.json())
     .then(body => setCardAndResult(body));
   }
 
+  //Starts a 10 second count-down after Start Game button is clicked
   const startCountdown = () => {
     const interval = setInterval(() => {
       setCount(prevCount => {
@@ -57,6 +62,8 @@ function App() {
     };
   };
 
+  //Sends the user choice lower/equal/higher to back-end and receives the response whether it was correct or not
+  //Also resets the counter back to 10 seconds
   const sendUserChoice = (event) => {
     event.preventDefault();
     setCount(10);
@@ -74,6 +81,7 @@ function App() {
     });
   };
 
+  //The game ends when the player runs out of lives
   useEffect(() => {
     if (lives === 0) {
       endGame();
