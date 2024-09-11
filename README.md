@@ -35,5 +35,5 @@ Run the HiLoCardGameApplication from IDE.
 
 1. Make sure you have NodeJS version 18+ installed.  
 2. Open the terminal.  
-3. Navigate to frontend project cd frontend/  
-4. Start the development server npm start. Frontend runs on port 4200, so make sure it's not in use.  
+3. Navigate to frontend project cd cardgame-front/  
+4. Start the development server npm start. Frontend runs on port 3000, so make sure it's not in use.  
